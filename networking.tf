@@ -1,17 +1,17 @@
 resource "azurerm_virtual_network" "name" {
-  name = "demo-vnet"
-  address_space = ["10.0.0.0/16"]
-  location = azurerm_resource_group.dc.location
+  name                = "demo-vnet"
+  address_space       = ["10.0.0.0/16"]
+  location            = azurerm_resource_group.dc.location
   resource_group_name = azurerm_resource_group.dc.name
 
-  dns_servers = [ var.private_ip ]
+  dns_servers = [var.private_ip]
 }
 
 resource "azurerm_subnet" "dc" {
   name                 = "Web"
   virtual_network_name = azurerm_virtual_network.name.name
   resource_group_name  = azurerm_resource_group.dc.name
-  address_prefixes = [ "10.0.0.0/24" ]
+  address_prefixes     = ["10.0.0.0/24"]
 }
 
 resource "azurerm_network_security_group" "dc" {
@@ -31,7 +31,7 @@ resource "azurerm_network_security_group" "dc" {
     destination_address_prefix = "*"
   }
 
-    security_rule {
+  security_rule {
     name                       = "Allow-All-Out"
     priority                   = 101
     direction                  = "Outbound"
@@ -102,7 +102,7 @@ resource "azurerm_network_security_group" "dc" {
   #   source_address_prefix      = "*"
   #   destination_address_prefix = "AzureActiveDirectory"
   # }
-  
+
 
 }
 
@@ -121,5 +121,5 @@ resource "azurerm_public_ip" "dc" {
   resource_group_name = azurerm_resource_group.dc.name
   location            = azurerm_resource_group.dc.location
   allocation_method   = "Dynamic"
-  sku = "Basic"
+  sku                 = "Basic"
 }

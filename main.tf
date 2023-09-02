@@ -1,6 +1,6 @@
 resource "azurerm_resource_group" "dc" {
   name     = "${var.workload}-${var.environment}-rg"
-  location = var.location   
+  location = var.location
 }
 
 resource "azurerm_network_interface" "dc" {
@@ -13,7 +13,7 @@ resource "azurerm_network_interface" "dc" {
     subnet_id                     = azurerm_subnet.dc.id
     private_ip_address_allocation = "Static"
     private_ip_address            = var.private_ip
-    public_ip_address_id = azurerm_public_ip.dc.id
+    public_ip_address_id          = azurerm_public_ip.dc.id
   }
 
 }
@@ -43,13 +43,13 @@ resource "azurerm_windows_virtual_machine" "dc" {
 
 }
 
- resource "azurerm_virtual_machine_extension" "dc" {
-    name                 = "${var.workload}-${var.environment}-ad-join"
-    virtual_machine_id   = azurerm_windows_virtual_machine.dc.id
-    publisher            = "Microsoft.Compute"
-    type                 = "CustomScriptExtension"
-    type_handler_version = "1.9"
-    settings             = <<SETTINGS
+resource "azurerm_virtual_machine_extension" "dc" {
+  name                 = "${var.workload}-${var.environment}-ad-join"
+  virtual_machine_id   = azurerm_windows_virtual_machine.dc.id
+  publisher            = "Microsoft.Compute"
+  type                 = "CustomScriptExtension"
+  type_handler_version = "1.9"
+  settings             = <<SETTINGS
       {
         "commandToExecute": "powershell -ExecutionPolicy Unrestricted -File setup-forest.ps1 -password ${var.admin_password} -domain ${var.domain} -domainNetBiosName ${var.domain_net_bios_name}",
         "fileUris": ["https://raw.githubusercontent.com/ukponoobott/toolbox/main/scripts/setup-forest.ps1"]
@@ -60,6 +60,6 @@ resource "azurerm_windows_virtual_machine" "dc" {
     azurerm_windows_virtual_machine.dc
   ]
   lifecycle {
-    ignore_changes = [ type_handler_version ]
+    ignore_changes = [type_handler_version]
   }
-  }
+}
